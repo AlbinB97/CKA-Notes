@@ -6,10 +6,10 @@ nav:
   - Home: index.md
   - Commands: commands.md
 
+plugins:
+  - search
+
 theme:
   name: dracula
   logo: img/CKA-img.png
   favicon: img/favicon.ico
-
-plugins:
-  - search

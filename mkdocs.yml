@@ -10,6 +10,6 @@ plugins:
   - search
 
 theme:
-  name: dracula
+  name: material
   logo: img/CKA-img.png
   favicon: img/favicon.ico

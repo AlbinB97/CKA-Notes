@@ -1,7 +1,7 @@
 # Imperative useful commands
 This page shows most common and basic use cases, refer to the kubectl reference documentation for more in depth imperative commands.
 
-https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
+[https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands)
 
 ### Creating a deployment
 ```

@@ -1,11 +1,15 @@
 site_name: CKA Notes
-
-theme:
-  name: material
+repo_name: AlbinB97/CKA-Notes
+repo_url: https://github.com/AlbinB97/CKA-Notes
 
 nav:
   - Home: index.md
-  - Useful Commands: commands.md
+  - Commands: commands.md
+
+theme:
+  name: dracula
+  logo: img/CKA-img.png
+  favicon: img/favicon.ico
 
 plugins:
   - search

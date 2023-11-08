@@ -1,3 +1,5 @@
-# This is the homepage
+# Home
 
-Click [here](commands.md) to view commands
+Personal documentation on some useful commands and what they do, in prep for CKA exam.
+
+Go to [commands](commands.md) to see more information.

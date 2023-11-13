@@ -23,6 +23,11 @@ kubectl run nginx-pod --image nginx
 kubectl expose pod nginx-pod --port 8080
 ```
 
+### Creating an ingress
+```
+kubectl create ingress <ingress-name> --rule="host/path=service:port"
+```
+
 ### Creating these as YAML files to edit further
 Simply add `--dry-run=client -o yaml > filename.yaml` to any imperative command
 ```

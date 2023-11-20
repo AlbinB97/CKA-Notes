@@ -6,3 +6,8 @@ This documentation is in the very early stages. So the structure of everything i
 ```
 ps -aux | grep <process>
 ```
+
+### Force delete a pod because exam environment is slow
+```
+kubectl delete pods <pod> --grace-period=0 --force
+```

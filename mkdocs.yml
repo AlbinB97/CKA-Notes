@@ -9,7 +9,11 @@ nav:
     - Imperative: commands/imperative.md
     - Network: commands/network.md
     - Crictl: commands/crictl.md
-    - Etcdctl: commands/etcdctl.md
+  - Information:
+    - Etcd FAQ: information/etcd.md
+    - Diagnose Crashed Apiserver: information/diagnose-crashed-apiserver.md
+    - YAML FAQ: information/yaml-faq.md
+    - Vi 101: information/vi-101.md
 
 plugins:
   - search

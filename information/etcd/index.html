@@ -1,0 +1,1241 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../commands/crictl/">
+      
+      
+        <link rel="next" href="../diagnose-crashed-apiserver/">
+      
+      
+      <link rel="icon" href="../../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.10">
+    
+    
+      
+        <title>Etcd FAQ - CKA Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.fad675c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#etcd-faq" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="CKA Notes" class="md-header__button md-logo" aria-label="CKA Notes" data-md-component="logo">
+      
+  <img src="../../img/CKA-img.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CKA Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Etcd FAQ
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/AlbinB97/CKA-Notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    AlbinB97/CKA-Notes
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="CKA Notes" class="md-nav__button md-logo" aria-label="CKA Notes" data-md-component="logo">
+      
+  <img src="../../img/CKA-img.png" alt="logo">
+
+    </a>
+    CKA Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/AlbinB97/CKA-Notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    AlbinB97/CKA-Notes
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Commands
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Commands
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/WIP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WIP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/imperative/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Imperative
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/network/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Network
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/crictl/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Crictl
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Information
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Information
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Etcd FAQ
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Etcd FAQ
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-etcdctl_api3-all-about" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is ETCDCTL_API=3 all about?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-do-i-use-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      When do I use --endpoints?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-all-the-certificates-used-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      What are all the certificates used for?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What are all the certificates used for?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-cacert" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cacert
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cert" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cert
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      --key
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#should-i-stop-api-server-andor-etcd-during-backup-or-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      Should I stop API server and/or etcd during backup or restore?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-make-a-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      How do I make a backup?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-restore-a-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      How do I restore a backup?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How do I restore a backup?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kubeadm-clusters-with-etcd-running-as-a-pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      kubeadm clusters with etcd running as a pod
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kubeadm clusters with etcd running as a pod">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-after-the-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting after the restore
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clusters-with-external-etcd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clusters with external etcd
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Clusters with external etcd">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-etcd-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single etcd process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-etcd-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple etcd processes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diagnose-crashed-apiserver/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diagnose Crashed Apiserver
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../yaml-faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAML FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vi-101/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vi 101
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-etcdctl_api3-all-about" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is ETCDCTL_API=3 all about?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-do-i-use-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      When do I use --endpoints?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-all-the-certificates-used-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      What are all the certificates used for?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What are all the certificates used for?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-cacert" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cacert
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cert" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cert
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      --key
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#should-i-stop-api-server-andor-etcd-during-backup-or-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      Should I stop API server and/or etcd during backup or restore?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-make-a-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      How do I make a backup?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-restore-a-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      How do I restore a backup?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How do I restore a backup?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kubeadm-clusters-with-etcd-running-as-a-pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      kubeadm clusters with etcd running as a pod
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kubeadm clusters with etcd running as a pod">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-after-the-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting after the restore
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clusters-with-external-etcd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clusters with external etcd
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Clusters with external etcd">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-etcd-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single etcd process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-etcd-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple etcd processes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="etcd-faq">ETCD FAQ</h1>
+<p>Source: <a href="https://github.com/kodekloudhub/community-faq/blob/main/docs/etcd-faq.md">https://github.com/kodekloudhub/community-faq/blob/main/docs/etcd-faq.md</a></p>
+<p><code>etcd</code> is a distributed key-value store, kind of similar to a NoSQL database. It is the database backend chosen by the Kubernetes project for the storage of cluster state. It is a separate open source project that is not maintained by the Kubernetes developers, but no doubt they have some input on its development.</p>
+<ul>
+<li><a href="#what-is-etcdctlapi3-all-about">What is ETCDCTL_API=3 all about?</a></li>
+<li><a href="#when-do-i-use---endpoints">When do I use --endpoints?</a></li>
+<li><a href="#what-are-all-the-certificates-used-for">What are all the certificates used for?</a></li>
+<li><a href="#should-i-stop-api-server-andor-etcd-during-backup-or-restore">Should I stop API server and/or etcd during backup or restore?</a></li>
+<li><a href="#how-do-i-make-a-backup">How do I make a backup?</a></li>
+<li><a href="#how-do-i-restore-a-backup">How do I restore a backup?</a><ul>
+<li><a href="#kubeadm-clusters-with-etcd-running-as-a-pod">kubeadm clusters with etcd running as a pod</a></li>
+<li><a href="#troubleshooting-after-the-restore">Troubleshooting after the restore</a></li>
+</ul>
+</li>
+<li><a href="#clusters-with-external-etcd">Clusters with external etcd</a><ul>
+<li><a href="#single-etcd-process">Single etcd process</a></li>
+<li><a href="#multiple-etcd-processes">Multiple etcd processes</a></li>
+</ul>
+</li>
+<li><a href="#advanced-usage">Advanced Usage</a><ul>
+<li><a href="#how-do-i-read-data-directly-from-etcd">How do I read data directly from etcd?</a></li>
+<li><a href="#how-do-i-encrypt-secrets-at-rest">How do I encrypt secrets at rest?</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>NOTE</strong>: In the exam, you are advised to skip this question and come back to it at the end, as it is probably the hardest one and you don't want to waste time if there are easier questions further on!!</p>
+<h2 id="what-is-etcdctl_api3-all-about">What is ETCDCTL_API=3 all about?</h2>
+<p><code>etcdctl</code> supports two versions of the server's API. When making server calls, it defaults to version 2 of the API, and in version 2 some operations are either undefined, or have different arguments. Setting this environment variable tells <code>etcdctl</code> to use the V3 API, which is required for the snapshot functionality.</p>
+<p>You may set the environment variable with each call...</p>
+<pre><code class="language-bash">ETCDCTL_API=3 etcdctl snapshot save ...
+ETCDCTL_API=3 etcdctl snapshot restore ...
+</code></pre>
+<p>...or for the entire terminal session...</p>
+<pre><code class="language-bash">export ETCDCTL_API=3
+etcdctl snapshot save ...
+etcdctl snapshot restore ...
+</code></pre>
+<h2 id="when-do-i-use-endpoints">When do I use --endpoints?</h2>
+<p>The <code>--endpoints</code> argument on <code>etcdctl</code> is used to tell it where to find the <code>etcd</code> server. If you are running the command on the same host where <code>etcd</code> service is running <em>and</em> there is only one instance of <code>etcd</code>, then you do not need to provide this argument, as it has a default value of <code>https://127.0.0.1:2379</code>.<br>This is the case in most labs, as your prompt will nearly always be on the controlplane node.</p>
+<p>If you run <code>etcdctl</code> from a different workstation from where <code>etcd</code> is running, as may be the case in a production environment, <em>or</em> you need to use a non-standard port, then you need to provide this argument to say where the <code>etcd</code> server is. If you need to determine <code>host-ip</code> and/or <code>port</code> they can be found by looking at the etcd manifest (or systemd unit file when etcd is external) and finding this on the <code>--listen-client-urls</code> argument.</p>
+<ul>
+<li>Same host, different port: <code>--endpoints https://127.0.0.1:port</code></li>
+<li>Remote host: <code>--endpoints https://host-ip:port</code></li>
+</ul>
+<h2 id="what-are-all-the-certificates-used-for">What are all the certificates used for?</h2>
+<p>When we take a backup, we have to pass three arguments related to certificates. This is because we must authenticate with the <code>etcd</code> server before it will divulge its sensitive data. The authentication scheme is called Mutual TLS (mTLS).</p>
+<p>This is an extension of what happens when you browse to an HTTPS web site. For web sites, that is one-way TLS where the web server must prove its identity to the browser before an encrypted channel is established. In mTLS, both ends must prove their identity to each other.</p>
+<p>Note that for <em>restore</em> on single <code>etcd</code> node clusters such as those found in the exam, it is not necessary to use the certificate arguments, since all the restore is doing is creating a directory. It does not need to communicate with the <code>etcd</code> server - which may even not be running if the exam deliberately sets it up with a corrupt database. You would only use certs and some additional arguments when restoring a broken node into what is left of a multi-node <code>etcd</code>, which is beyond the scope of CKA.</p>
+<h3 id="-cacert">--cacert</h3>
+<ul>
+<li>This provides the path to the Certificate Authority (CA) certificate. The CA certificate is used to verify the authenticity of the TLS certificate sent to <code>etcdctl</code> by the <code>etcd</code> server. The server's certificate must be found to be <em>signed by</em> the CA certificate. When building a cluster, creating the CA is one of the tasks you need to do. <code>kubeadm</code> does it automatically, but to see how it is done manually (outside the scope of CKA exam), see <a href="https://github.com/mmumshad/kubernetes-the-hard-way">kubernetes the hard way</a>.</li>
+</ul>
+<h3 id="-cert">--cert</h3>
+<ul>
+<li>This is the path to the TLS certificate that <code>etcdctl</code> sends to the <code>etcd</code> server. The <code>etcd</code> server will verify that this certificate is also signed by the same CA certificate. Certificates of this type contain a <em>public key</em> which can be used to encrypt data. The public key is used by the server to encrypt data being sent back to <code>etcdctl</code> during the authentication steps.</li>
+</ul>
+<h3 id="-key">--key</h3>
+<ul>
+<li>This is the path to the private key that is used to decrypt data sent to <code>etcdctl</code> by the <code>etcd</code> server during the authentication steps. The key is <em>only</em> used by the <code>etcdctl</code> process. It is never sent to the server.</li>
+</ul>
+<p>For ease, you will find that normally both <code>etcdctl</code> and <code>etcd</code> share all three certificates, and these are the ones usually found in <code>/etc/kubernetes/pki/etcd</code>, however it is possible to issue <code>etcdtl</code> with its own certificate and key which is considered more secure, but that certificate must have been signed by the shared CA certificate.</p>
+<p>CA certificates are public knowledge. For HTTPS to work, your computer has copies of many well-known CA certificates, such as Comodo, DigiCert, GlobalSign etc. On Windows, these are located in the Trusted Root Certification Authorities section of the Certificate Manager application. When a web server passes its TLS certificate to the browser, it is these CA certificates it looks up to verify the identity of the web server.</p>
+<p>For a more detailed explanation of how mTLS works, see <a href="https://www.cloudflare.com/en-gb/learning/access-management/what-is-mutual-tls/">this page</a>.</p>
+<h2 id="should-i-stop-api-server-andor-etcd-during-backup-or-restore">Should I stop API server and/or etcd during backup or restore?</h2>
+<blockquote>
+<p>No</p>
+</blockquote>
+<p>Consider a production environment. In such environments, you would be making regular automated backups of etcd. If you stopped either of these processes, then the cluster could go offline, and you would be faced with a production major incident!</p>
+<p>etcd is designed to ensure consistency in its backups even while in use, just as you would expect from any regular SQL database.</p>
+<p>There may be some instances on a multi-node etcd cluster that it would be beneficial to stop everything to do a restore to ensure the database is not written before all nodes are aligned. In the CKA exam, all clusters are single-node etcd.</p>
+<h2 id="how-do-i-make-a-backup">How do I make a backup?</h2>
+<p>In order to take a backup, there are several required arguments, as we need to authenticate with the server to pull any data from it. These are</p>
+<ul>
+<li><code>--cacert</code> - Path the the <code>etcd</code> CA certificate</li>
+<li><code>--cert</code> - Path to the <code>etcd</code> server certificate</li>
+<li><code>--key</code> - Path to the <code>etcd</code> server private key</li>
+<li><code>--endpoints</code> - Only required in certain circumstances. See <a href="#when-do-i-use---endpoints">this FAQ question</a>.</li>
+</ul>
+<p>On <code>kubeadm</code> clusters such as the labs, killer.sh or the exam, these files should be found in <code>/etc/kubernetes/pki/etcd</code> on the control plane node, which is where you should run <code>etcdctl</code> unless instructed otherwise. A question may also tell you which certs to use, in which case adjust the following accordingly.</p>
+<p>Sample backup command</p>
+<pre><code class="language-bash">ETCDCTL_API=3 etcdctl snapshot save \
+    --cacert /etc/kubernetes/pki/etcd/ca.crt \
+    --cert /etc/kubernetes/pki/etcd/server.crt \
+    --key /etc/kubernetes/pki/etcd/server.key \
+    /opt/snapshot-pre-boot.db
+</code></pre>
+<h2 id="how-do-i-restore-a-backup">How do I restore a backup?</h2>
+<p>Normally you will restore this to another directory, and then point the <code>etcd</code> service at the new location. For restores, the certificate and endpoints arguments are not required, as all we are doing is creating files in directories and not talking to the <code>etcd</code> API, so the only argument required is <code>--data-dir</code> to tell <code>etcdctl</code> where to put the restored files.</p>
+<p>What needs to be done following the restore to get <code>etcd</code> to use it depends on how the cluster is deployed.</p>
+<p>Sample restore command</p>
+<pre><code class="language-bash">ETCDCTL_API=3 etcdctl snapshot restore \
+    --data-dir /var/lib/etcd-from-backup \
+    /opt/snapshot-pre-boot.db
+</code></pre>
+<h3 id="kubeadm-clusters-with-etcd-running-as-a-pod">kubeadm clusters with etcd running as a pod</h3>
+<p>This is known as "stacked etcd"</p>
+<p>It is a change to a single line in the manifest.</p>
+<p>Determine that the cluster is configured this way by executing the following and determining that <code>etcd</code> is in the results</p>
+<pre><code>kubectl get pods -n kube-system
+</code></pre>
+<p>Now do the following on the control node.</p>
+<ol>
+<li>Edit the manifest file for <code>etcd</code> on the controlplane node. This is found in <br><code>/etc/kubernetes/manifests/etcd.yaml</code>.</li>
+<li>Scroll down to the <code>volumes</code> section and find the volume that describes the data directory (see below).</li>
+<li>Edit the <code>hostPath.path</code> of the volume with name <code>etcd-data</code> from <code>/var/lib/etcd</code> to <code>/var/lib/etcd-from-backup</code> (or whichever directory you used for the restore command). Note that you <em>do not</em> change the <code>--data-dir</code> command line argument to <code>etcd</code> in the container's command specification.</li>
+<li>Wait about a minute for everything to reload.</li>
+</ol>
+<p>This is the section in <code>etcd.yaml</code> that you need to find...</p>
+<pre><code class="language-yaml">  volumes:
+  - hostPath:
+      path: /etc/kubernetes/pki/etcd
+      type: DirectoryOrCreate
+    name: etcd-certs
+  - hostPath:
+      path: /var/lib/etcd    # &lt;- change this
+      type: DirectoryOrCreate
+    name: etcd-data
+</code></pre>
+<p>Why does this work? You need to remember how mounting volumes in containers works.</p>
+<ul>
+<li><code>volumes.hostPath.path</code> which you edited above specifies the directory on the node (host) where the data is stored. This is the actual location of where the backup was restored to.</li>
+<li><code>containers.volumeMounts.mountPath</code> specifies the directory <em>inside</em> the container where the host data is mounted. We haven't changed that. From the <code>etcd</code> container's point of view, the directory is still <code>/var/lib/etcd</code>.</li>
+</ul>
+<p>And note...</p>
+<pre><code class="language-yaml">  containers:
+  - command:
+    - etcd
+    - --advertise-client-urls=https://10.40.10.9:2379
+    - --cert-file=/etc/kubernetes/pki/etcd/server.crt
+    - --client-cert-auth=true
+    - --data-dir=/var/lib/etcd                  # &lt;- DO NOT CHANGE THIS!
+    - --initial-advertise-peer-urls=https://10.40.10.9:2380
+    - --initial-cluster=controlplane=https://10.40.10.9:2380
+</code></pre>
+<h4 id="troubleshooting-after-the-restore">Troubleshooting after the restore</h4>
+<p>It can take up to 60 seconds for service to resume after you have edited the <code>etcd</code> manifest. You may observe the progress of the pod restarts by running the following command. As mentioned above, give it up to 60 seconds to become stable.</p>
+<pre><code class="language-bash">watch crictl ps
+</code></pre>
+<p>This will show you the running <em>containers</em>, refreshing the list every two seconds. You are waiting for the following to be stable:</p>
+<pre><code>Every 2.0s: crictl ps                                                                                                                                    controlplane: Thu Jan 26 01:50:48 2023
+
+CONTAINER           IMAGE               CREATED             STATE               NAME                      ATTEMPT             POD ID              POD
+c6e61480ac614       a31e1d84401e6       9 minutes ago       Running             kube-apiserver            6                   2623ac5d1b43b       kube-apiserver-controlplane
+629d81d592938       fce326961ae2d       10 minutes ago      Running             etcd                      0                   87710b3c9a99a       etcd-controlplane
+3715d4173cc9f       5d7c5dfd3ba18       15 minutes ago      Running             kube-controller-manager   1                   bd8758b9de774       kube-controller-manager-controlplane
+b182a4a2ba76d       dafd8ad70b156       15 minutes ago      Running             kube-scheduler            1                   3359954829552       kube-scheduler-controlplane
+e431a0ba0c04d       5185b96f0becf       23 minutes ago      Running             coredns                   0                   8d65a558ea93d       coredns-787d4945fb-2jn9w
+b8e8d94ea1074       5185b96f0becf       23 minutes ago      Running             coredns                   0                   7dc120679094d       coredns-787d4945fb-xj4ll
+fc30b4a42a287       8b675dda11bb1       23 minutes ago      Running             kube-proxy                0                   d73933f8fac41       kube-proxy-b9cv2
+</code></pre>
+<p>All the containers must be stable, i.e. not flipping on and off the list and <code>ATTEMPT</code> value should stop increasing. There may be other containers, but the ones in this list are the important ones. To get out of this display, press <code>CTRL-C</code>. Now you should be able to run <code>kubectl</code> commands again.</p>
+<p>If the <code>etcd</code> pod does not come back up in a reasonable time, you can <a href="../diagnose-crashed-apiserver/">troubleshoot the same way as for apiserver</a>.</p>
+<h2 id="clusters-with-external-etcd">Clusters with external etcd</h2>
+<p>This covers both <code>kubeadm</code> clusters where <code>etcd</code> is <em>not</em> running as a pod, and fully manual installations like <a href="https://github.com/mmumshad/kubernetes-the-hard-way">kubernetes the hard way</a>.</p>
+<p>Some people have suggested that this is how some of the <code>etcd</code> questions the exam question bank are set up, as in you have to do it all from some node other than the control node for the target cluster. It requires a bit more work, but it doesn't mean that you will definitely get a question that is this way and not stacked-mode as above!</p>
+<p>If you do find that your backup/restore question is an External etcd, then definitely flag the question and leave it till last!</p>
+<p>On the node where you are instructed to do the task, first become root, if you are not already root.</p>
+<pre><code class="language-bash">sudo -i
+</code></pre>
+<p>Next, determine how many <code>etcd</code> processes there are</p>
+<pre><code>ps -aux | grep etcd
+</code></pre>
+<p>The output looks like this</p>
+<blockquote>
+<p>etcd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;804&nbsp;&nbsp;&nbsp;&nbsp;0.0  0.0 11217856 46296 ?      Ssl  10:10   0:08 /usr/local/bin/etcd --name etcd-server --data-dir=/var/lib/etcd-data --cert-file=/etc/etcd/pki/etcd.pem --key-file=/etc/etcd/pki/etcd-key.pem --peer-cert-file=/etc/etcd/pki/etcd.pem --peer-key-file=/etc/etcd/pki/etcd-key.pem --trusted-ca-file=/etc/etcd/pki/ca.pem --peer-trusted-ca-file=/etc/etcd/pki/ca.pem --peer-client-cert-auth --client-cert-auth --initial-advertise-peer-urls <span>https://</span>10.21.18.18:2380 --listen-peer-urls <span>https://</span>10.21.18.18:2380 --advertise-client-urls <span>https://</span>10.21.18.18:2379 <code>--listen-client-urls https://10.21.18.18:2379,https://127.0.0.1:2379</code> --initial-cluster-token etcd-cluster-1 --initial-cluster etcd-server=https://10.21.18.18:2380 --initial-cluster-state new<br>
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1106&nbsp;&nbsp;&nbsp;&nbsp;0.0  0.0  13448  1064 pts/0    S+   10:17   0:00 grep etcd</p>
+</blockquote>
+<p>In the above, there is one instance of <code>etcd</code> running. If there were more, then you would see additional big blocks of <code>etcd</code> arguments. It should be highly unusual to be faced with more than one <code>etcd</code> running on the same host in the exam. If you have seen more than one <code>etcd</code>, please post in the <a href="https://kodekloud.slack.com/archives/CHMV3P9NV">slack channel</a>. Don't include full details of the question, as that would violate NDA. Only state that you have seen multiple external etcd processes.</p>
+<p>In the exam, use the <code>mousepad</code> application to take notes.</p>
+<h3 id="single-etcd-process">Single etcd process</h3>
+<ol>
+<li>Note down the port number from <code>--listen-client-urls</code>. It will be unusual (not impossible) if it is something other than <code>2379</code></li>
+<li>
+<p>Determine the name of the <code>etcd</code> service unit. Note that the service unit files end with <code>.service</code>. When referring to a service uint with <code>sysemctl</code> commands, it is not necessary to type <code>.service</code> - it is assumed, therefore less typing!</p>
+<p><code>bash
+systemctl list-unit-files | grep etcd</code></p>
+<blockquote>
+<p>Output will be like</p>
+</blockquote>
+<p><code>etcd.service                               enabled         enabled</code>
+1. If the location of the service unit file has not been given in the question, then you must locate it. You will need to edit it later if you have to do a restore.</p>
+<p><code>bash
+systemctl cat etcd</code></p>
+<blockquote>
+<p>Output (some lines truncated. Important lines are shown)</p>
+</blockquote>
+<p>```bash
+  # /etc/systemd/system/etcd.service
+  [Unit]
+  Description=etcd
+  Documentation=https://github.com/coreos</p>
+<p>[Service]
+  ExecStart=/usr/local/bin/etcd \
+  --- truncated---
+    --listen-client-urls https://192.168.56.11:2379,https://127.0.0.1:2379
+  --- truncated---
+    --data-dir /var/lib/etcd
+  ```</p>
+<ul>
+<li>Note the first line which is a comment. This is the full path to the file. Note it down, you will need to edit this file later if doing a restore.</li>
+<li>Note also the values for <code>--listen-client-urls</code></li>
+</ul>
+</li>
+<li>
+<p>If you have been instructed to take a backup, then you should have been given the path to the certificates to use with <code>etcdctl</code>. If you have only been given a <em>directory</em> name, rather than all three certificates, do an <code>ls -l</code> of this directory to determine the certificate/key names.<br>For instance, if the directory given is <code>/etc/etcd/pki</code> and you find this contains <code>ca.crt</code>, <code>server.crt</code> and <code>server.key</code> then the command would be</p>
+<p><code>bash
+ETCDCTL_API=3 etcdctl snapshot save \
+  --cacert /etc/etcd/pki/ca.crt \
+  --cert /etc/etcd/pki/server.crt \
+  --key /etc/etcd/pki/server.key \
+  /path/to/snapshot.db</code></p>
+<p>Note that if the port number on <code>--listen-client-urls</code> is not 2379, then you also require <code>--endpoints</code></p>
+</li>
+<li>
+<p>If you have been instructed to do a restore then</p>
+<ol>
+<li>
+<p>Determine the ownership of the original data directory as found in the unit file above at <code>--data-dir</code></p>
+<p><code>bash
+ls -ld /var/lib/etcd</code></p>
+<blockquote>
+<p>Output - here we see it is owned by <code>etcd:etcd</code></p>
+</blockquote>
+<pre><code>drwx------ 3 etcd etcd 4096 Nov 28 01:18 /var/lib/etcd
+</code></pre>
+</li>
+<li>
+<p>Do the restore to whichever directory instructed by the question. For instance, if it is <code>/var/lib/etcd-from-backup</code> then</p>
+<p><code>bash
+ETCDCTL_API=3 etcdctl snapshot restore \
+  --data-dir /var/lib/etcd-from-backup \
+  /path/to/snapshot.db</code></p>
+</li>
+<li>
+<p>If the original data directory was not owned by root, set the ownership of the newly created directory to the correct user:group</p>
+<p><code>bash
+chown -R etcd:etcd /var/lib/etcd-from-backup</code></p>
+</li>
+<li>
+<p>Now edit the system uint file with <code>vi</code> using the path you noted above and set <code>--data-dir</code> to where you did the restore, e.g. <code>/var/lib/etcd-from-backup</code></p>
+<p><code>bash
+vi /etc/systemd/system/etcd.service</code></p>
+</li>
+<li>
+<p>Restart the <code>etcd</code> service</p>
+<p><code>bash
+systemctl daemon-reload
+systemctl restart etcd</code></p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="multiple-etcd-processes">Multiple etcd processes</h3>
+<p>It is highly unlikely you will find this configuration, but if you do, please report it in the <a href="https://kodekloud.slack.com/archives/CHMV3P9NV">slack channel</a>.</p>
+<p>If there's more than one, you need to identify the correct one! In the output of the above <code>ps -aux | grep etcd</code> command, you should be able to see the <code>--listen-client-urls</code> argument. Note down the port numbers from this URL for each <code>etcd</code> process.</p>
+<ol>
+<li>
+<p>Go onto the control node for the target cluster and run</p>
+<ul>
+<li>
+<p>If it is a kubeadm cluster (api server is running as a pod). It should be like this in the exam.</p>
+<p><code>grep etcd-servers /etc/kubernetes/manifests/kube-apiserver.yaml</code></p>
+</li>
+<li>
+<p>If it is not kubeadm, and api server is an operating system service</p>
+</li>
+</ul>
+<p><code>sudo ps -aux | grep apiserver</code></p>
+<p>Find <code>--etcd-servers</code> in the argument list and note the port number. You need to match that with one of the port numbers you've noted down above. That will get you the correct <code>etcd</code> process.</p>
+<p>Log out of the control node and return to the node running <code>etcd</code>. When you get there, remember to do <code>sudo -i</code> again if needed.</p>
+</li>
+<li>
+<p>Next, find the unit file for the correct <code>etcd</code> service. The following will give you the file <em>names</em>.</p>
+<p><code>bash
+systemctl list-unit-files | grep etcd</code></p>
+<blockquote>
+<p>Output will be something like</p>
+</blockquote>
+<pre><code>```
+etcd-1.service                               enabled         enabled
+etcd-2.service                               enabled         enabled
+```
+</code></pre>
+</li>
+<li>
+<p>To locate these files, run the following on each filename returned by the command above</p>
+<p><code>bash
+systemctl cat etcd-1
+systemctl cat etcd-2</code></p>
+<p>Refer to above sections for what the output looks like. Find the correct one by examining each identified unit file and choose the one that has the matching port number for the <code>--listen-client-urls</code> argument. You will need to edit this later if doing a restore.</p>
+</li>
+<li>
+<p>If you have been instructed to take a backup, then identify the certificates as per instructions for single etcd above and form the backup command in the same way, but additionally specify <code>--endpoint CLIENT_URL</code> where <code>CLIENT_URL</code> is the URL from the<br/><code>--listen-client-urls</code> in the identified unit file. Choose the <code>https://127.0.0.1:...</code> URL if present.</p>
+</li>
+<li>
+<p>If you have been instructed to do a restore</p>
+<ol>
+<li>Perform the same steps as for single etcd to form the restore command, and to set directory ownership.</li>
+<li>Edit the correct service unit file identified above and set the new <code>--data-dir</code></li>
+<li>Restart the identified service with <code>systemctl daemon-reload</code> and <code>systemctl restart</code></li>
+</ol>
+</li>
+</ol>
+<p>Please also try the following lab for practice of external etcd</p>
+<blockquote>
+<p>https://kodekloud.com/topic/practice-test-backup-and-restore-methods-2-2/</p>
+</blockquote>
+<h1 id="advanced-usage">Advanced Usage</h1>
+<p>This section contains topics that may come up in CKS exam. You do not need to know this for CKA.</p>
+<h2 id="how-do-i-read-data-directly-from-etcd">How do I read data directly from etcd?</h2>
+<p>You may get a question that asks you to get data directly from the etcd database, for instance the content of a secret.</p>
+<p>ETCD in Kubernetes stores data under <code>/registry/{type}/{namespace}/{name}</code>.</p>
+<p>Thus, if you were looking for a <code>secret</code> called <code>database-access</code> in namespace <code>team-green</code>, the key path would be</p>
+<pre><code>/registry/secrets/team-green/database-access
+</code></pre>
+<p>To read this data, you would run the following <code>get</code> command</p>
+<pre><code>ETCDCTL_API=3 etcdctl \
+  --cacert /etc/kubernetes/pki/etcd/ca.crt \
+  --cert /etc/kubernetes/pki/apiserver-etcd-client.crt \
+  --key /etc/kubernetes/pki/apiserver-etcd-client.key \
+  get /registry/secrets/team-green/database-access
+</code></pre>
+<p>The same rules <a href="#when-do-i-use---endpoints">discussed above</a> apply to the use of <code>--endpoints</code></p>
+<h2 id="how-do-i-encrypt-secrets-at-rest">How do I encrypt secrets at rest?</h2>
+<p>Secrets are more or less human readable when stored in etcd. To store them in an encrypted form you need to create an encryption configuration file, then update the API server manifest to make use of it. The steps to do this are detailed <a href="https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#encrypting-your-data">here</a>.</p>
+<p>Once the configuration is properly applied, you can encrypt existing secrets by replacing them.</p>
+<p>All secrets in the cluster</p>
+<pre><code>kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+</code></pre>
+<p>A single namespace</p>
+<pre><code>kubectl get secrets -n some_namespace -o json | kubectl replace -f -
+</code></pre>
+<p>A single secret</p>
+<pre><code>kubectl get secrets my_secret -o json | kubectl replace -f -
+</code></pre>
+<p>In our <a href="https://github.com/mmumshad/kubernetes-the-hard-way">kubernetes the hard way</a> labs, we enable secret encryption at rest by default.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.6c14ae12.min.js"></script>
+      
+    
+  </body>
+</html>
